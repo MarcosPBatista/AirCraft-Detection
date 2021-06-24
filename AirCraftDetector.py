@@ -7,12 +7,15 @@ Created on Fri Jun  4 11:04:28 2021
 
 import cv2 as cv
 import numpy as np
-from msvcrt import getch
-#import matplotlib.pyplot as plt
 
 cap = cv.VideoCapture(r"C:\Users\marco\Desktop\Profissional\USP\Mestrado\ProcessamentoImagem\FinalProject\AirCraft-Detection\Dataset\EVision_VideoDataset\1FNB737.avi")
 #Initialize ORB
 orb = cv.ORB_create()
+matcher = cv.BFMatcher(cv.NORM_HAMMING, crossCheck=True)
+
+ret,last_frame = cap.read()
+kp = orb.detect(last_frame,None)
+last_kp, last_des = orb.compute(last_frame, kp)
 
 
 while(cap.isOpened()):
@@ -35,6 +38,25 @@ while(cap.isOpened()):
         
         cv.imshow('Stacked Image', img_stack)
         
+        #Check Matching between last image and actual
+        matches = matcher.match(last_des, des)
+        # Sort them in the order of their distance.
+        matches = sorted(matches, key = lambda x:x.distance)
+        match_img = cv.drawMatches(last_frame, last_kp,  
+                                   frame,kp, matches[:30],None, flags = 2) 
+        reduced_match_img = cv.resize(match_img,(0,0), None, 0.5, 0.5)
+        bin_ORB = np.zeros(frame.shape, dtype = np.uint8)
+        
+        for i in range(len(kp)):
+            bin_ORB[int(kp[i].pt[1]),int(kp[i].pt[0])] = 255
+        reduced_bin_ORB = cv.resize(bin_ORB,(0,0), None, 0.5, 0.5)
+            
+        cv.imshow('Bin_ORB', np.hstack((reduced_img_final, reduced_bin_ORB)))
+        
+        cv.imshow('Match between previous and actual image', reduced_match_img)
+        
+        last_frame = frame
+        last_kp, last_des = kp, des
         #Use 'q' in Keyboard to stop the video or Space (' ') to run step by step.
         Keyboard = cv.waitKey(1) & 0xFF
         if Keyboard == ord('q'):
@@ -42,5 +64,8 @@ while(cap.isOpened()):
         elif Keyboard == ord(' '):
             cv.waitKey(0)
             continue
+    else:
+        break
+    
         
 cv.destroyAllWindows()
