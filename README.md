@@ -26,6 +26,21 @@ and is invariant to rotation and scale.
 Consideration: Since Optical Flow and ORB aren't that easy to implement by hand. The focus here will be to use OpenCV and try to adjust the implementation
 to achieve good results.
 
-#4) Up to now it run ORB to detect features as shown bellow.
+#4.1) Many applications use CNN in order to solve this problem. However, our approach here will be just to use Image Processing and Computer Vision Basic operations.
+
+Up to now, the first try is described as follow:
+- ORB detection -> Create Binary image considering KeyPoints -> Apply Closing Morphology technique to remove noise and amplify the object -> Subtract to the last run image (first try to use motion detection) -> Apply OTSU Threshold.
+
+- ORB
 ![image](https://user-images.githubusercontent.com/85201876/123179368-a4650e80-d45f-11eb-94d6-ec2a9314a543.png)
+
+-Bin Image of ORB and after Closing Morphology.
+![image](https://user-images.githubusercontent.com/85201876/123555577-f5754b00-d75c-11eb-976e-0cd33faa1b17.png)
+
+
+- Diff between actual image vs last.
+![image](https://user-images.githubusercontent.com/85201876/123555581-fd34ef80-d75c-11eb-954b-21b7ae387336.png)
+
+Next steps:
+Develop a new branch in order to implement tracking and, if possible, set a bounding box.
 
