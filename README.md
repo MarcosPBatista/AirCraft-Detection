@@ -39,6 +39,7 @@ Up to now, the first try is described as follow:
 
 
 - Diff between actual image vs last.
+
 ![image](https://user-images.githubusercontent.com/85201876/123555581-fd34ef80-d75c-11eb-954b-21b7ae387336.png)
 
 Next steps:
