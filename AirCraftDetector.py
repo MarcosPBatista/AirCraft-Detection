@@ -45,74 +45,74 @@ def MatchImgs(frame, kp, des, last_frame, last_kp, last_des):
                                    frame,kp, matches[:30],None, flags = 2) 
     
     return match_img
-def main():
-    cap = cv.VideoCapture(r"C:\Users\marco\Desktop\Profissional\USP\Mestrado\ProcessamentoImagem\FinalProject\AirCraft-Detection\Dataset\EVision_VideoDataset\2FNB737.avi")
-    #Initialize ORB
-    orb = cv.ORB_create()
-    
-    #Initialize Matcher and Previous Image/Keypoint/Descriptors
-    ret,frame = cap.read()
-    last_frame = frame #cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    kp = orb.detect(last_frame,None)
-    last_kp, last_des = orb.compute(last_frame, kp)
-    ORB_bin = np.zeros(last_frame.shape, dtype = np.uint8)
-    last_ORB_bin = ORB_bin
-    
-    while(cap.isOpened()):
-        #Read image
-        ret, frame_raw = cap.read()
-        
-        if ret == True:
-            
-            
-            frame = frame_raw#cv.cvtColor(frame_raw, cv.COLOR_BGR2GRAY)
-            
-            #Detect keypoints using ORB
-            kp, des, ORB_raw = ORB_detect(frame, orb)
-            
-            #Match frame and last_frame using ORB
-            match_img = MatchImgs(frame, kp, des, last_frame, last_kp, last_des)
-            ORB_bin = np.zeros(last_frame.shape, dtype = np.uint8)
-            
-            #Convert ORB to Binary Image
-            for i in range(len(kp)):
-                ORB_bin[int(kp[i].pt[1]),int(kp[i].pt[0])] = 255
-            
-            #Apply Gaussian Filter to eliminate punctual kp
-            ORB_bin = cv.GaussianBlur(ORB_bin, (3,3), 1)
-            
-            #Apply Dilation to enhance
-            kernel = np.ones((8,8))
-            ORB_bin = cv.dilate(ORB_bin, kernel)
-    
-            #Calculate Movement
-            ORB_bin_diff = cv.subtract(ORB_bin, last_ORB_bin)
-            
-            cv.imshow('ORB_bin_diff', cv.resize(ORB_bin_diff, (0,0), fx=0.5, fy=0.5))
-            
-            #Resize and show images
-            reduced_ORB_bin, reduced_match_img, resize_ORB_Raw = Resize_Img2Plot(
-                ORB_bin,match_img, ORB_raw)
-            
-            cv.imshow('ORB_bin', np.hstack((resize_ORB_Raw, reduced_ORB_bin)))
-            cv.imshow('Match between previous and actual image', reduced_match_img)
-            
-            #Update last detections and frame
-            last_frame, last_ORB_bin = frame, ORB_bin
-            last_kp, last_des = kp, des
-            
-            #Use 'q' in Keyboard to stop the video or Space (' ') to run step by step.
-            Keyboard = cv.waitKey(1) & 0xFF
-            if Keyboard == ord('q'):
-                break
-            elif Keyboard == ord(' '):
-                cv.waitKey(0)
-                continue
-        else:
-            break
-        
-            
-    cv.destroyAllWindows()
 
-if __name__ == "__main__":
-    main()
+cap = cv.VideoCapture(r"C:\Users\marco\Desktop\Profissional\USP\Mestrado\ProcessamentoImagem\FinalProject\AirCraft-Detection\Dataset\EVision_VideoDataset\2FNB737.avi")
+#Initialize ORB
+orb = cv.ORB_create()
+
+#Initialize Matcher and Previous Image/Keypoint/Descriptors
+ret,frame = cap.read()
+last_frame = frame #cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+kp = orb.detect(last_frame,None)
+last_kp, last_des = orb.compute(last_frame, kp)
+ORB_bin = np.zeros(last_frame.shape, dtype = np.uint8)
+last_ORB_bin = ORB_bin[:,:,0]
+
+while(cap.isOpened()):
+    #Read image
+    ret, frame_raw = cap.read()
+    
+    if ret == True:
+        
+        
+        frame = frame_raw#cv.cvtColor(frame_raw, cv.COLOR_BGR2GRAY)
+        
+        #Detect keypoints using ORB
+        kp, des, ORB_raw = ORB_detect(frame, orb)
+        
+        #Match frame and last_frame using ORB
+        match_img = MatchImgs(frame, kp, des, last_frame, last_kp, last_des)
+        ORB_bin = np.zeros(last_frame.shape, dtype = np.uint8)
+        
+        #Convert ORB to Binary Image
+        for i in range(len(kp)):
+            ORB_bin[int(kp[i].pt[1]),int(kp[i].pt[0])] = 255
+        
+        #Apply Filter to eliminate punctual kp
+        ORB_filter = cv.medianBlur(ORB_bin, 9)
+        
+        #Apply Dilation to enhance
+        kernel = np.ones((10,10))      
+        ORB_morph = cv.morphologyEx(ORB_bin, cv.MORPH_CLOSE, kernel)#cv.dilate(ORB_bin, kernel)
+        
+        ORB_bin_resized, ORB_filter_resized, ORB_morph_resized = Resize_Img2Plot(ORB_bin, ORB_filter, ORB_morph)
+        
+        cv.imshow('ORB Bin - ORB with Close', np.hstack((ORB_bin_resized, ORB_morph_resized)))
+        
+        ORB_morph = cv.cvtColor(ORB_morph, cv.COLOR_BGR2GRAY)
+
+        #Calculate Movement
+        ORB_bin_diff = cv.subtract(ORB_morph, last_ORB_bin)
+        
+        #Apply Threshold
+        ret, ORB_thresh = cv.threshold(ORB_bin_diff,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU)
+        
+        cv.imshow('ORB_bin_diff', cv.resize(ORB_bin_diff, (0,0), fx=0.5, fy=0.5))
+           
+        #Update last detections and frame
+        last_frame, last_ORB_bin = frame, ORB_morph
+        last_kp, last_des = kp, des
+        
+        #Use 'q' in Keyboard to stop the video or Space (' ') to run step by step.
+        Keyboard = cv.waitKey(1) & 0xFF
+        if Keyboard == ord('q'):
+            break
+        elif Keyboard == ord(' '):
+            cv.waitKey(0)
+            continue
+    else:
+        break
+    
+        
+cv.destroyAllWindows()
+
