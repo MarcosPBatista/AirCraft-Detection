@@ -30,7 +30,7 @@ By step:
 
 ![image](https://user-images.githubusercontent.com/85201876/125605652-9f715fc5-e4b0-4d50-bf6e-7ddfbb64327e.png)
 
-![image](https://user-images.githubusercontent.com/85201876/125605689-e9e22191-c435-44ad-aa76-df6deb7ed0d0.png)
+![image](https://user-images.githubusercontent.com/85201876/125606900-f9c87c31-53b7-4fb5-9f57-3006487b9c51.png)
 
 
 #4.1) Many applications use CNN in order to solve this problem. However, our approach here will be just to use Image Processing and Computer Vision Basic operations.
