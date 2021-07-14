@@ -18,30 +18,37 @@ It uses synthetic images in order to create dataset since this kind of dataset i
 synthetic airplane in it.
 
 #3) There are many possible ways to do that. Iris Automation (https://www.irisonboard.com/casia/) uses machine learning to detect and classify
-it. However, since they are a company, it's not possible to know it in detail. One approach which is suitable for this scope/time is to use
-motion detection in order to identify possible objects. One technique is Optical Flow. We can detect this points, cluster them, maybe apply some 
-morphological in those cluster, filter and track them. In order to track, a feature detector/descritor could be ORB which is fast than SURF/SIFT
-and is invariant to rotation and scale.
+it. However, since they are a company, it's not possible to know it in detail. The adjusted proposal is described as follow: 
 
-Consideration: Since Optical Flow and ORB aren't that easy to implement by hand. The focus here will be to use OpenCV and try to adjust the implementation
-to achieve good results.
+![image](https://user-images.githubusercontent.com/85201876/125605439-8d80e70a-d973-4994-ad9d-fd66d8bfd0a3.png)
+
+By step:
+![image](https://user-images.githubusercontent.com/85201876/125605600-99868111-c5da-4133-bbbd-960fc03ed10e.png)
+![image](https://user-images.githubusercontent.com/85201876/125605624-ea3e0abf-fd74-4c79-8be7-72a2f671d583.png)
+![image](https://user-images.githubusercontent.com/85201876/125605652-9f715fc5-e4b0-4d50-bf6e-7ddfbb64327e.png)
+![image](https://user-images.githubusercontent.com/85201876/125605689-e9e22191-c435-44ad-aa76-df6deb7ed0d0.png)
+
 
 #4.1) Many applications use CNN in order to solve this problem. However, our approach here will be just to use Image Processing and Computer Vision Basic operations.
 
-Up to now, the first try is described as follow:
-- ORB detection -> Create Binary image considering KeyPoints -> Apply Closing Morphology technique to remove noise and amplify the object -> Subtract to the last run image (first try to use motion detection) -> Apply OTSU Threshold.
+Final results:
 
-- ORB
-![image](https://user-images.githubusercontent.com/85201876/123179368-a4650e80-d45f-11eb-94d6-ec2a9314a543.png)
+- Airplane detected (With some background on the ground):
+![image](https://user-images.githubusercontent.com/85201876/125605871-9a41fba6-7df3-43ff-8066-8b0bbbc66745.png)
+![image](https://user-images.githubusercontent.com/85201876/125606005-3f81c339-74b3-4250-b8e1-461624cd367c.png)
+![image](https://user-images.githubusercontent.com/85201876/125606073-5536d836-0b7b-47cc-96ec-7e336ee68c86.png)
+![image](https://user-images.githubusercontent.com/85201876/125606147-316c9cd7-c51f-4b48-9641-21634af2b1be.png)
+- With clouds, we have a lot of problems with background that could be isolated:
+![image](https://user-images.githubusercontent.com/85201876/125606313-4eedb4d9-5ba3-496b-b0ed-0b60056e44cc.png)
+![image](https://user-images.githubusercontent.com/85201876/125606387-4846a6a0-cd93-4052-afc0-4b92b47ff3cd.png)
 
--Bin Image of ORB and after Closing Morphology.
-![image](https://user-images.githubusercontent.com/85201876/123555577-f5754b00-d75c-11eb-976e-0cd33faa1b17.png)
 
-
-- Diff between actual image vs last.
-
-![image](https://user-images.githubusercontent.com/85201876/123555581-fd34ef80-d75c-11eb-954b-21b7ae387336.png)
+Conclusions: 
+- In all videos, it was possible to detect moving objects in the scene.
+- It wasn’t able to filter background (clouds, etc).
 
 Next steps:
-Develop a new branch in order to implement tracking and, if possible, set a bounding box.
+- Use Optical Flow + IMU data to filter background;
+- Use YOLO and Transfer Learning to detect Airplane.
+
 
