@@ -25,8 +25,11 @@ it. However, since they are a company, it's not possible to know it in detail. T
 By step:
 
 ![image](https://user-images.githubusercontent.com/85201876/125605600-99868111-c5da-4133-bbbd-960fc03ed10e.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125605624-ea3e0abf-fd74-4c79-8be7-72a2f671d583.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125605652-9f715fc5-e4b0-4d50-bf6e-7ddfbb64327e.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125605689-e9e22191-c435-44ad-aa76-df6deb7ed0d0.png)
 
 
@@ -37,13 +40,17 @@ Final results:
 - Airplane detected (With some background on the ground):
 
 ![image](https://user-images.githubusercontent.com/85201876/125605871-9a41fba6-7df3-43ff-8066-8b0bbbc66745.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125606005-3f81c339-74b3-4250-b8e1-461624cd367c.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125606073-5536d836-0b7b-47cc-96ec-7e336ee68c86.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125606147-316c9cd7-c51f-4b48-9641-21634af2b1be.png)
 
 - With clouds, we have a lot of problems with background that could be isolated:
 
 ![image](https://user-images.githubusercontent.com/85201876/125606313-4eedb4d9-5ba3-496b-b0ed-0b60056e44cc.png)
+
 ![image](https://user-images.githubusercontent.com/85201876/125606387-4846a6a0-cd93-4052-afc0-4b92b47ff3cd.png)
 
 
